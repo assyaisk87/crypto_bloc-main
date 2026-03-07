@@ -3,6 +3,59 @@
 part of 'crypto_model.dart';
 
 // **************************************************************************
+// TypeAdapterGenerator
+// **************************************************************************
+
+class CryptoModelAdapter extends TypeAdapter<CryptoModel> {
+  @override
+  final typeId = 0;
+
+  @override
+  CryptoModel read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return CryptoModel(
+      id: fields[0] as String,
+      name: fields[1] as String,
+      symbol: fields[3] as String,
+      rank: (fields[4] as num).toInt(),
+      priceUsd: fields[5] as String,
+      percentChange24h: fields[6] as String,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, CryptoModel obj) {
+    writer
+      ..writeByte(6)
+      ..writeByte(0)
+      ..write(obj.id)
+      ..writeByte(1)
+      ..write(obj.name)
+      ..writeByte(3)
+      ..write(obj.symbol)
+      ..writeByte(4)
+      ..write(obj.rank)
+      ..writeByte(5)
+      ..write(obj.priceUsd)
+      ..writeByte(6)
+      ..write(obj.percentChange24h);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CryptoModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+// **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 

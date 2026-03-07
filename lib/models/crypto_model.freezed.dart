@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CryptoModel {
 
- String get id; String get name; String get symbol; int get rank;@JsonKey(name: 'price_usd') String get priceUsd;@JsonKey(name: 'percent_change_24h') String get percentChange24h;
+@HiveField(0) String get id;@HiveField(1) String get name;@HiveField(3) String get symbol;@HiveField(4) int get rank;@HiveField(5)@JsonKey(name: 'price_usd') String get priceUsd;@HiveField(6)@JsonKey(name: 'percent_change_24h') String get percentChange24h;
 /// Create a copy of CryptoModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $CryptoModelCopyWith<$Res>  {
   factory $CryptoModelCopyWith(CryptoModel value, $Res Function(CryptoModel) _then) = _$CryptoModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, String symbol, int rank,@JsonKey(name: 'price_usd') String priceUsd,@JsonKey(name: 'percent_change_24h') String percentChange24h
+@HiveField(0) String id,@HiveField(1) String name,@HiveField(3) String symbol,@HiveField(4) int rank,@HiveField(5)@JsonKey(name: 'price_usd') String priceUsd,@HiveField(6)@JsonKey(name: 'percent_change_24h') String percentChange24h
 });
 
 
@@ -158,7 +158,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String symbol,  int rank, @JsonKey(name: 'price_usd')  String priceUsd, @JsonKey(name: 'percent_change_24h')  String percentChange24h)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@HiveField(0)  String id, @HiveField(1)  String name, @HiveField(3)  String symbol, @HiveField(4)  int rank, @HiveField(5)@JsonKey(name: 'price_usd')  String priceUsd, @HiveField(6)@JsonKey(name: 'percent_change_24h')  String percentChange24h)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CryptoModel() when $default != null:
 return $default(_that.id,_that.name,_that.symbol,_that.rank,_that.priceUsd,_that.percentChange24h);case _:
@@ -179,7 +179,7 @@ return $default(_that.id,_that.name,_that.symbol,_that.rank,_that.priceUsd,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String symbol,  int rank, @JsonKey(name: 'price_usd')  String priceUsd, @JsonKey(name: 'percent_change_24h')  String percentChange24h)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@HiveField(0)  String id, @HiveField(1)  String name, @HiveField(3)  String symbol, @HiveField(4)  int rank, @HiveField(5)@JsonKey(name: 'price_usd')  String priceUsd, @HiveField(6)@JsonKey(name: 'percent_change_24h')  String percentChange24h)  $default,) {final _that = this;
 switch (_that) {
 case _CryptoModel():
 return $default(_that.id,_that.name,_that.symbol,_that.rank,_that.priceUsd,_that.percentChange24h);case _:
@@ -199,7 +199,7 @@ return $default(_that.id,_that.name,_that.symbol,_that.rank,_that.priceUsd,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String symbol,  int rank, @JsonKey(name: 'price_usd')  String priceUsd, @JsonKey(name: 'percent_change_24h')  String percentChange24h)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@HiveField(0)  String id, @HiveField(1)  String name, @HiveField(3)  String symbol, @HiveField(4)  int rank, @HiveField(5)@JsonKey(name: 'price_usd')  String priceUsd, @HiveField(6)@JsonKey(name: 'percent_change_24h')  String percentChange24h)?  $default,) {final _that = this;
 switch (_that) {
 case _CryptoModel() when $default != null:
 return $default(_that.id,_that.name,_that.symbol,_that.rank,_that.priceUsd,_that.percentChange24h);case _:
@@ -214,15 +214,15 @@ return $default(_that.id,_that.name,_that.symbol,_that.rank,_that.priceUsd,_that
 @JsonSerializable()
 
 class _CryptoModel implements CryptoModel {
-  const _CryptoModel({required this.id, required this.name, required this.symbol, required this.rank, @JsonKey(name: 'price_usd') required this.priceUsd, @JsonKey(name: 'percent_change_24h') required this.percentChange24h});
+  const _CryptoModel({@HiveField(0) required this.id, @HiveField(1) required this.name, @HiveField(3) required this.symbol, @HiveField(4) required this.rank, @HiveField(5)@JsonKey(name: 'price_usd') required this.priceUsd, @HiveField(6)@JsonKey(name: 'percent_change_24h') required this.percentChange24h});
   factory _CryptoModel.fromJson(Map<String, dynamic> json) => _$CryptoModelFromJson(json);
 
-@override final  String id;
-@override final  String name;
-@override final  String symbol;
-@override final  int rank;
-@override@JsonKey(name: 'price_usd') final  String priceUsd;
-@override@JsonKey(name: 'percent_change_24h') final  String percentChange24h;
+@override@HiveField(0) final  String id;
+@override@HiveField(1) final  String name;
+@override@HiveField(3) final  String symbol;
+@override@HiveField(4) final  int rank;
+@override@HiveField(5)@JsonKey(name: 'price_usd') final  String priceUsd;
+@override@HiveField(6)@JsonKey(name: 'percent_change_24h') final  String percentChange24h;
 
 /// Create a copy of CryptoModel
 /// with the given fields replaced by the non-null parameter values.
@@ -257,7 +257,7 @@ abstract mixin class _$CryptoModelCopyWith<$Res> implements $CryptoModelCopyWith
   factory _$CryptoModelCopyWith(_CryptoModel value, $Res Function(_CryptoModel) _then) = __$CryptoModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, String symbol, int rank,@JsonKey(name: 'price_usd') String priceUsd,@JsonKey(name: 'percent_change_24h') String percentChange24h
+@HiveField(0) String id,@HiveField(1) String name,@HiveField(3) String symbol,@HiveField(4) int rank,@HiveField(5)@JsonKey(name: 'price_usd') String priceUsd,@HiveField(6)@JsonKey(name: 'percent_change_24h') String percentChange24h
 });
 
 

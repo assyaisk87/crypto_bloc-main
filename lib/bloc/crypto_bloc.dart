@@ -9,7 +9,14 @@ class CryptoBloc extends Bloc<CryptoEvent, CryptoState> {
 
   CryptoBloc(this.cryptoRepository) : super(const CryptoState()) {
     on<LoadCryptoData>((event, emit) async {
-      emit(state.copyWith(isLoading: true, error: null));
+      final localData = cryptoRepository.getLocaleCrypyoData();
+      if (localData.isNotEmpty) {
+        emit(
+          state.copyWith(cryptoList: localData, isLoading: false, error: null),
+        );
+      } else {
+        emit(state.copyWith(isLoading: true, error: null));
+      }
 
       try {
         final data = await cryptoRepository.fetchCryptoData();
@@ -21,41 +28,47 @@ class CryptoBloc extends Bloc<CryptoEvent, CryptoState> {
       }
     });
 
-     on<FilterGainers>((event, emit) {
+    on<FilterGainers>((event, emit) {
       final gainers = state.cryptoList.where(
-        (item) => double.parse(item.percentChange24h) > 0
+        (item) => double.parse(item.percentChange24h) > 0,
       );
-      
+
       emit(state.copyWith(cryptoList: gainers.toList()));
     });
 
     on<ResetFilter>((event, emit) {
-         add(LoadCryptoData());
+      add(LoadCryptoData());
     });
 
-    on<FilterDrops>((event, emit) {     
+    on<ClearCache>((event, emit) async {
+      await cryptoRepository.clearCache();
+      emit(state.copyWith(cryptoList: []));
+    });
+
+    on<FilterDrops>((event, emit) {
       final drops = state.cryptoList.where(
-        (item) => double.parse(item.percentChange24h) < 0
+        (item) => double.parse(item.percentChange24h) < 0,
       );
-      
+
       emit(state.copyWith(cryptoList: drops.toList()));
     });
 
     on<Top10>((event, emit) {
       final gainers = state.cryptoList
-      .where((item) => double.tryParse(item.percentChange24h) != null)
-      .toList();
+          .where((item) => double.tryParse(item.percentChange24h) != null)
+          .toList();
 
       // сортируем по убыванию процента роста
-      gainers.sort((a, b) =>
-          double.parse(b.percentChange24h).compareTo(double.parse(a.percentChange24h)));
+      gainers.sort(
+        (a, b) => double.parse(
+          b.percentChange24h,
+        ).compareTo(double.parse(a.percentChange24h)),
+      );
 
       // берём только топ-10
       final top10 = gainers.take(10).toList();
 
       emit(state.copyWith(cryptoList: top10));
     });
-   
   }
 }
-
