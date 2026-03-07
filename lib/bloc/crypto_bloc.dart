@@ -12,7 +12,12 @@ class CryptoBloc extends Bloc<CryptoEvent, CryptoState> {
       final localData = cryptoRepository.getLocaleCrypyoData();
       if (localData.isNotEmpty) {
         emit(
-          state.copyWith(cryptoList: localData, isLoading: false, error: null),
+          state.copyWith(
+            cryptoList: localData,
+            originalCryptoList: localData,
+            isLoading: false,
+            error: null,
+          ),
         );
       } else {
         emit(state.copyWith(isLoading: true, error: null));
@@ -21,7 +26,13 @@ class CryptoBloc extends Bloc<CryptoEvent, CryptoState> {
       try {
         final data = await cryptoRepository.fetchCryptoData();
 
-        emit(state.copyWith(cryptoList: data, isLoading: false));
+        emit(
+          state.copyWith(
+            cryptoList: data,
+            originalCryptoList: data,
+            isLoading: false,
+          ),
+        );
       } catch (e) {
         print('object $e');
         emit(state.copyWith(error: e.toString(), isLoading: false));
@@ -29,7 +40,7 @@ class CryptoBloc extends Bloc<CryptoEvent, CryptoState> {
     });
 
     on<FilterGainers>((event, emit) {
-      final gainers = state.cryptoList.where(
+      final gainers = state.originalCryptoList.where(
         (item) => double.parse(item.percentChange24h) > 0,
       );
 
@@ -37,7 +48,7 @@ class CryptoBloc extends Bloc<CryptoEvent, CryptoState> {
     });
 
     on<ResetFilter>((event, emit) {
-      add(LoadCryptoData());
+      emit(state.copyWith(cryptoList: state.originalCryptoList));
     });
 
     on<ClearCache>((event, emit) async {
@@ -46,7 +57,7 @@ class CryptoBloc extends Bloc<CryptoEvent, CryptoState> {
     });
 
     on<FilterDrops>((event, emit) {
-      final drops = state.cryptoList.where(
+      final drops = state.originalCryptoList.where(
         (item) => double.parse(item.percentChange24h) < 0,
       );
 
@@ -54,7 +65,7 @@ class CryptoBloc extends Bloc<CryptoEvent, CryptoState> {
     });
 
     on<Top10>((event, emit) {
-      final gainers = state.cryptoList
+      final gainers = state.originalCryptoList
           .where((item) => double.tryParse(item.percentChange24h) != null)
           .toList();
 
