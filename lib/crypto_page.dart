@@ -20,6 +20,12 @@ class CryptoPage extends StatelessWidget {
             },
             icon: Icon(Icons.delete),
           ),
+          IconButton(
+            onPressed: () {
+              context.read<CryptoBloc>().add(ClearAllFavorites());
+            },
+            icon: Icon(Icons.heart_broken),
+          ),
         ],
       ),
       body: BlocConsumer<CryptoBloc, CryptoState>(

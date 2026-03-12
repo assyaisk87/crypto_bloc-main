@@ -12,6 +12,8 @@ class Top10 extends CryptoEvent {}
 
 class ClearCache extends CryptoEvent {}
 
+class ClearAllFavorites extends CryptoEvent {}
+
 class ToggleFavorite extends CryptoEvent {
   final String id;
   ToggleFavorite(this.id);

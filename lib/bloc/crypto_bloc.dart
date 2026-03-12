@@ -22,8 +22,13 @@ class CryptoBloc extends Bloc<CryptoEvent, CryptoState> {
           ),
         );
       } else {
-        emit(state.copyWith(isLoading: true,
-            favoritesIds: savedFavorites, error: null));
+        emit(
+          state.copyWith(
+            isLoading: true,
+            favoritesIds: savedFavorites,
+            error: null,
+          ),
+        );
       }
 
       await Future.delayed(Duration(seconds: 5)); // имитация задержки
@@ -49,11 +54,18 @@ class CryptoBloc extends Bloc<CryptoEvent, CryptoState> {
         (item) => double.parse(item.percentChange24h) > 0,
       );
 
-      emit(state.copyWith(cryptoList: gainers.toList()));
+      emit(
+        state.copyWith(showOnlyFavorites: false, cryptoList: gainers.toList()),
+      );
     });
 
     on<ResetFilter>((event, emit) {
-      emit(state.copyWith(cryptoList: state.originalCryptoList));
+      emit(
+        state.copyWith(
+          showOnlyFavorites: false,
+          cryptoList: state.originalCryptoList,
+        ),
+      );
     });
 
     on<ClearCache>((event, emit) async {
@@ -66,7 +78,9 @@ class CryptoBloc extends Bloc<CryptoEvent, CryptoState> {
         (item) => double.parse(item.percentChange24h) < 0,
       );
 
-      emit(state.copyWith(cryptoList: drops.toList()));
+      emit(
+        state.copyWith(showOnlyFavorites: false, cryptoList: drops.toList()),
+      );
     });
 
     on<Top10>((event, emit) {
@@ -84,10 +98,10 @@ class CryptoBloc extends Bloc<CryptoEvent, CryptoState> {
       // берём только топ-10
       final top10 = gainers.take(10).toList();
 
-      emit(state.copyWith(cryptoList: top10));
+      emit(state.copyWith(showOnlyFavorites: false, cryptoList: top10));
     });
 
-   on<ToggleFavorite>((event, emit) {
+    on<ToggleFavorite>((event, emit) {
       final currentFavorites = Set<String>.from(state.favoritesIds);
       if (currentFavorites.contains(event.id)) {
         currentFavorites.remove(event.id);
@@ -100,6 +114,11 @@ class CryptoBloc extends Bloc<CryptoEvent, CryptoState> {
 
     on<FilterFavorites>((event, emit) {
       emit(state.copyWith(showOnlyFavorites: !state.showOnlyFavorites));
+    });
+
+    on<ClearAllFavorites>((event, emit) async {
+      await cryptoRepository.clearAllFavorites();
+      emit(state.copyWith(showOnlyFavorites: false, favoritesIds: {}));
     });
   }
 }

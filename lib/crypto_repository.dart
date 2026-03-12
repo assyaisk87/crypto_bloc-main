@@ -14,6 +14,7 @@ class CryptoRepository {
   }
 
   Future<void> clearCache() => _cryptoBox.clear();
+  Future<void> clearAllFavorites() => _favoritesBox.clear();
    
   Set<String> getFavoriteIds() {
     return _favoritesBox.values.toSet();
