@@ -35,6 +35,14 @@ class CryptoPage extends StatelessWidget {
             'settingsBox',
           ).get('last_update', defaultValue: 'Никогда не обновлялось');
 
+          var displayList = state.cryptoList;
+
+          if (state.showOnlyFavorites) {
+            displayList = displayList.where((c) {
+              return state.favoritesIds.contains(c.id);
+            }).toList();
+          }
+
           if (state.isLoading && state.cryptoList.isEmpty) {
             return Center(child: CircularProgressIndicator());
           }
@@ -49,27 +57,33 @@ class CryptoPage extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      context.read<CryptoBloc>().add(FilterGainers());
-                    },
-                    child: Text('Рост'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      context.read<CryptoBloc>().add(ResetFilter());
-                    },
-                    child: Text('Сброс'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      context.read<CryptoBloc>().add(FilterDrops());
-                    },
-                    child: Text('Падение'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
                       context.read<CryptoBloc>().add(Top10());
                     },
                     child: Text('Top 10'),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      context.read<CryptoBloc>().add(FilterGainers());
+                    },
+                    icon: Icon(Icons.trending_up, color: Colors.green),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      context.read<CryptoBloc>().add(FilterDrops());
+                    },
+                    icon: Icon(Icons.trending_down, color: Colors.red),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      context.read<CryptoBloc>().add(FilterFavorites());
+                    },
+                    icon: Icon(Icons.star),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      context.read<CryptoBloc>().add(ResetFilter());
+                    },
+                    icon: Icon(Icons.refresh),
                   ),
                 ],
               ),
@@ -78,20 +92,38 @@ class CryptoPage extends StatelessWidget {
               SizedBox(height: 20),
               Expanded(
                 child: ListView.builder(
-                  itemCount: state.cryptoList.length,
+                  itemCount: displayList.length,
                   itemBuilder: (context, index) {
-                    final crypto = state.cryptoList[index];
+                    final crypto = displayList[index];
+                    final isFavorite = state.favoritesIds.contains(crypto.id);
                     return Card(
                       child: ListTile(
                         title: Text(crypto.name),
                         subtitle: Text('${crypto.priceUsd}\$'),
-                        trailing: Text(
-                          '${crypto.percentChange24h}%',
-                          style: TextStyle(
-                            color: double.parse(crypto.percentChange24h) >= 0
-                                ? Colors.green
-                                : Colors.red,
-                          ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              '${crypto.percentChange24h}%',
+                              style: TextStyle(
+                                color:
+                                    double.parse(crypto.percentChange24h) >= 0
+                                    ? Colors.green
+                                    : Colors.red,
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                context.read<CryptoBloc>().add(
+                                  ToggleFavorite(crypto.id),
+                                );
+                              },
+                              icon: isFavorite
+                                  ? Icon(Icons.star)
+                                  : Icon(Icons.star_border),
+                              color: isFavorite ? Colors.yellow : Colors.grey,
+                            ),
+                          ],
                         ),
                       ),
                     );

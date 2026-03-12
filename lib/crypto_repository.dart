@@ -7,12 +7,25 @@ import 'package:http/http.dart' as http;
 class CryptoRepository {
   final Box<CryptoModel> _cryptoBox = Hive.box<CryptoModel>('cryptoBox');
   final Box _settingsBox = Hive.box('settingsBox');
+  final Box<String> _favoritesBox = Hive.box('favoritesBox');
 
   List<CryptoModel> getLocaleCrypyoData() {
     return _cryptoBox.values.toList();
   }
 
   Future<void> clearCache() => _cryptoBox.clear();
+   
+  Set<String> getFavoriteIds() {
+    return _favoritesBox.values.toSet();
+  }
+
+  void toggleFavorite(String id) {
+    if (_favoritesBox.containsKey(id)) {
+      _favoritesBox.delete(id);
+    } else {
+      _favoritesBox.put(id, id);
+    }
+  }
 
   Future<List<CryptoModel>> fetchCryptoData() async {
     final response = await http.get(

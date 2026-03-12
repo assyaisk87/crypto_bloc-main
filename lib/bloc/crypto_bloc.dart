@@ -10,18 +10,23 @@ class CryptoBloc extends Bloc<CryptoEvent, CryptoState> {
   CryptoBloc(this.cryptoRepository) : super(const CryptoState()) {
     on<LoadCryptoData>((event, emit) async {
       final localData = cryptoRepository.getLocaleCrypyoData();
+      final savedFavorites = cryptoRepository.getFavoriteIds();
       if (localData.isNotEmpty) {
         emit(
           state.copyWith(
             cryptoList: localData,
             originalCryptoList: localData,
+            favoritesIds: savedFavorites,
             isLoading: false,
             error: null,
           ),
         );
       } else {
-        emit(state.copyWith(isLoading: true, error: null));
+        emit(state.copyWith(isLoading: true,
+            favoritesIds: savedFavorites, error: null));
       }
+
+      await Future.delayed(Duration(seconds: 5)); // имитация задержки
 
       try {
         final data = await cryptoRepository.fetchCryptoData();
@@ -80,6 +85,21 @@ class CryptoBloc extends Bloc<CryptoEvent, CryptoState> {
       final top10 = gainers.take(10).toList();
 
       emit(state.copyWith(cryptoList: top10));
+    });
+
+   on<ToggleFavorite>((event, emit) {
+      final currentFavorites = Set<String>.from(state.favoritesIds);
+      if (currentFavorites.contains(event.id)) {
+        currentFavorites.remove(event.id);
+      } else {
+        currentFavorites.add(event.id);
+      }
+      cryptoRepository.toggleFavorite(event.id);
+      emit(state.copyWith(favoritesIds: currentFavorites));
+    });
+
+    on<FilterFavorites>((event, emit) {
+      emit(state.copyWith(showOnlyFavorites: !state.showOnlyFavorites));
     });
   }
 }

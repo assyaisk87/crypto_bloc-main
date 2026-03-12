@@ -10,5 +10,7 @@ abstract class CryptoState with _$CryptoState {
     @Default([]) List<CryptoModel> originalCryptoList,
     @Default(false) bool isLoading,
     String? error,
+     @Default({}) Set<String> favoritesIds,
+    @Default(false) bool showOnlyFavorites,
   }) = _CryptoState;
 }
